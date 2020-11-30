@@ -6,5 +6,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.0"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.10"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.10"/>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="4.0.0"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ChallengeInvillia.Domain\ChallengeInvillia.Domain.csproj"/>
+    <ProjectReference Include="..\ChallengeInvillia.Repository\ChallengeInvillia.Repository.csproj"/>
   </ItemGroup>
 </Project>

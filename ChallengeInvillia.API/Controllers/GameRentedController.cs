@@ -1,28 +1,24 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using ChallengeInvillia.Repository;
-using ChallengeInvillia.Domain;
 using AutoMapper;
 using ChallengeInvillia.API.Dtos;
+using ChallengeInvillia.Domain;
+using ChallengeInvillia.Repository;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ChallengeInvillia.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class FriendsController : ControllerBase
+    public class GameRentedController : ControllerBase
     {
         public readonly IChallengeInvilliaRepository _repo;
         public readonly IMapper _mapper;
-        public FriendsController(IChallengeInvilliaRepository repo, IMapper mapper)
+        public GameRentedController(IChallengeInvilliaRepository repo, IMapper mapper)
         {
-            _mapper = mapper;
             _repo = repo;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -30,9 +26,9 @@ namespace ChallengeInvillia.API.Controllers
         {
             try
             {
-                var friends = await _repo.GetAllFriendAsync();
+                var gamesRented = await _repo.GetAllGameRentedAsync();
 
-                var results = _mapper.Map<IEnumerable<FriendDto>>(friends);
+                var results = _mapper.Map<IEnumerable<GameRentedDto>>(gamesRented);
 
                 return Ok(results);
             }
@@ -40,7 +36,7 @@ namespace ChallengeInvillia.API.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha ao acessar banco de dados");
             }
-
+            
         }
 
         [HttpGet("{id}")]
@@ -48,27 +44,10 @@ namespace ChallengeInvillia.API.Controllers
         {
             try
             {
-                var friend = await _repo.GetFriendAsyncById(id);
+                var gameRented = await _repo.GetGameRentedAsyncById(id);
 
-                var results = _mapper.Map<FriendDto>(friend);
-
-                return Ok(results);
-            }
-            catch (System.Exception)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha ao acessar banco de dados");
-            }
-        }
-
-        [HttpGet("getByName/{name}")]
-        public async Task<IActionResult> Get(string name)
-        {
-            try
-            {
-                var friends = await _repo.GetFriendAsyncByName(name);
-
-                var results = _mapper.Map<IEnumerable<FriendDto>>(friends);
-
+                var results = _mapper.Map<GameRentedDto>(gameRented);
+                
                 return Ok(results);
             }
             catch (System.Exception)
@@ -78,15 +57,15 @@ namespace ChallengeInvillia.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(FriendDto model)
+        public async Task<IActionResult> Post(GameRentedDto model)
         {
             try
             {
-                var friend = _mapper.Map<Friend>(model);
-                _repo.Add(friend);
-                if (await _repo.SaveChangesAsync())
+                var gameRented = _mapper.Map<GameRented>(model);
+                _repo.Add(gameRented);
+                if(await _repo.SaveChangesAsync())
                 {
-                    return Created($"/api/friends/{model.Id}", _mapper.Map<FriendDto>(friend));
+                    return Created($"/api/gameRented/{model.Id}", _mapper.Map<GameRentedDto>(gameRented));
                 }
             }
             catch (System.Exception)
@@ -98,22 +77,22 @@ namespace ChallengeInvillia.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(int FriendId, FriendDto model)
+        public async Task<IActionResult> Put(int GameRentedId, GameRentedDto model)
         {
             try
             {
-                var friend = await _repo.GetFriendAsyncById(FriendId);
-
-                if (friend == null)
+                var gameRented = await _repo.GetGameRentedAsyncById(GameRentedId);
+                
+                if(gameRented == null) 
                     return NotFound();
 
-                _mapper.Map(model, friend);
+                _mapper.Map(model, gameRented);
 
-                _repo.Update(friend);
+                _repo.Update(model);
 
-                if (await _repo.SaveChangesAsync())
+                if(await _repo.SaveChangesAsync())
                 {
-                    return Created($"/api/friends/{model.Id}", _mapper.Map<FriendDto>(friend));
+                    return Created($"/api/gameRented/{model.Id}", _mapper.Map<GameRentedDto>(gameRented));
                 }
             }
             catch (System.Exception)
@@ -125,18 +104,18 @@ namespace ChallengeInvillia.API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(int FriendId)
+        public async Task<IActionResult> Delete(int GameRentedId)
         {
             try
             {
-                var friend = await _repo.GetFriendAsyncById(FriendId);
-
-                if (friend == null)
+                var gameRented = await _repo.GetGameRentedAsyncById(GameRentedId);
+                
+                if(gameRented == null) 
                     return NotFound();
 
-                _repo.Delete(friend);
+                _repo.Delete(gameRented);
 
-                if (await _repo.SaveChangesAsync())
+                if(await _repo.SaveChangesAsync())
                 {
                     return Ok();
                 }

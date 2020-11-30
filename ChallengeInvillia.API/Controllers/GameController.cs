@@ -1,28 +1,22 @@
-﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using ChallengeInvillia.Repository;
-using ChallengeInvillia.Domain;
 using AutoMapper;
 using ChallengeInvillia.API.Dtos;
+using ChallengeInvillia.Domain;
+using ChallengeInvillia.Repository;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ChallengeInvillia.API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class FriendsController : ControllerBase
+    public class GameController : ControllerBase
     {
         public readonly IChallengeInvilliaRepository _repo;
         public readonly IMapper _mapper;
-        public FriendsController(IChallengeInvilliaRepository repo, IMapper mapper)
+        public GameController(IChallengeInvilliaRepository repo, IMapper mapper)
         {
-            _mapper = mapper;
             _repo = repo;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -30,9 +24,9 @@ namespace ChallengeInvillia.API.Controllers
         {
             try
             {
-                var friends = await _repo.GetAllFriendAsync();
+                var games = await _repo.GetAllGameAsync();
 
-                var results = _mapper.Map<IEnumerable<FriendDto>>(friends);
+                var results = _mapper.Map<IEnumerable<GameDto>>(games);
 
                 return Ok(results);
             }
@@ -40,7 +34,7 @@ namespace ChallengeInvillia.API.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha ao acessar banco de dados");
             }
-
+            
         }
 
         [HttpGet("{id}")]
@@ -48,9 +42,9 @@ namespace ChallengeInvillia.API.Controllers
         {
             try
             {
-                var friend = await _repo.GetFriendAsyncById(id);
+                var game = await _repo.GetGameAsyncById(id);
 
-                var results = _mapper.Map<FriendDto>(friend);
+                var results = _mapper.Map<GameDto>(game);
 
                 return Ok(results);
             }
@@ -65,10 +59,8 @@ namespace ChallengeInvillia.API.Controllers
         {
             try
             {
-                var friends = await _repo.GetFriendAsyncByName(name);
-
-                var results = _mapper.Map<IEnumerable<FriendDto>>(friends);
-
+                var games = await _repo.GetGameAsyncByName(name);
+                var results = _mapper.Map<IEnumerable<GameDto>>(games);
                 return Ok(results);
             }
             catch (System.Exception)
@@ -78,15 +70,15 @@ namespace ChallengeInvillia.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(FriendDto model)
+        public async Task<IActionResult> Post(GameDto model)
         {
             try
             {
-                var friend = _mapper.Map<Friend>(model);
-                _repo.Add(friend);
-                if (await _repo.SaveChangesAsync())
+                var game = _mapper.Map<Game>(model);
+                _repo.Add(game);
+                if(await _repo.SaveChangesAsync())
                 {
-                    return Created($"/api/friends/{model.Id}", _mapper.Map<FriendDto>(friend));
+                    return Created($"/api/game/{model.Id}", _mapper.Map<FriendDto>(game));
                 }
             }
             catch (System.Exception)
@@ -98,22 +90,22 @@ namespace ChallengeInvillia.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(int FriendId, FriendDto model)
+        public async Task<IActionResult> Put(int GameId, GameDto model)
         {
             try
             {
-                var friend = await _repo.GetFriendAsyncById(FriendId);
-
-                if (friend == null)
+                var game = await _repo.GetGameAsyncById(GameId);
+                
+                if(game == null) 
                     return NotFound();
 
-                _mapper.Map(model, friend);
+                _mapper.Map(model, game);
 
-                _repo.Update(friend);
+                _repo.Update(game);
 
-                if (await _repo.SaveChangesAsync())
+                if(await _repo.SaveChangesAsync())
                 {
-                    return Created($"/api/friends/{model.Id}", _mapper.Map<FriendDto>(friend));
+                    return Created($"/api/game/{model.Id}", _mapper.Map<FriendDto>(game));
                 }
             }
             catch (System.Exception)
@@ -129,14 +121,14 @@ namespace ChallengeInvillia.API.Controllers
         {
             try
             {
-                var friend = await _repo.GetFriendAsyncById(FriendId);
-
-                if (friend == null)
+                var game = await _repo.GetGameAsyncById(FriendId);
+                
+                if(game == null) 
                     return NotFound();
 
-                _repo.Delete(friend);
+                _repo.Delete(game);
 
-                if (await _repo.SaveChangesAsync())
+                if(await _repo.SaveChangesAsync())
                 {
                     return Ok();
                 }
