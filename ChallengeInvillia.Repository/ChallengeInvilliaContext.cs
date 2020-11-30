@@ -3,7 +3,7 @@ using ChallengeInvillia.Domain;
 
 namespace ChallengeInvillia.Repository
 {
-    public class ChallengeInvilliaContext : DbContext 
+    public class ChallengeInvilliaContext : IdentityDbContext 
     {
         public ChallengeInvilliaContext(DbContextOptions<ChallengeInvilliaContext> options) : base (options){}
 

@@ -4,5 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Beiyuan.WebSystem.BlobStoring.Database.EntityFrameworkCore" Version="3.1.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.10"/>
   </ItemGroup>
 </Project>
