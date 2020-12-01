@@ -87,6 +87,7 @@ namespace ChallengeInvillia.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors("AllowOrigin");
             app.UseAuthentication();
 
             //app.UseHttpsRedirection();
