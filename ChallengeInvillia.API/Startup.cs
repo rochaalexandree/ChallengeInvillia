@@ -13,6 +13,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using ChallengeInvillia.Repository;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using ChallengeInvillia.Domain.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ChallengeInvillia.API
 {
@@ -29,9 +36,47 @@ namespace ChallengeInvillia.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ChallengeInvilliaContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            
+            IdentityBuilder builder = services.AddIdentityCore<User>( options => 
+            {
+               options.Password.RequireDigit = false; 
+               options.Password.RequireNonAlphanumeric = false;
+               options.Password.RequireLowercase = false; 
+               options.Password.RequireUppercase = false;
+               options.Password.RequiredLength = 4; 
+            });
+
+            builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
+            builder.AddEntityFrameworkStores<ChallengeInvilliaContext>();
+            builder.AddRoleValidator<RoleValidator<Role>>();
+            builder.AddRoleManager<RoleManager<Role>>();
+            builder.AddSignInManager<SignInManager<User>>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options => 
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+ 
+            services.AddCors(c =>  
+            {  
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());  
+            });    
+
             services.AddScoped<IChallengeInvilliaRepository, ChallengeInvilliaRepository>();
             services.AddAutoMapper();
-            services.AddControllers();
+            services.AddControllers(options => {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            }).AddJsonOptions(opt => {
+                opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                opt.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +86,8 @@ namespace ChallengeInvillia.API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAuthentication();
 
             //app.UseHttpsRedirection();
 
