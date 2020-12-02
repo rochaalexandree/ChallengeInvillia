@@ -8,12 +8,12 @@
             <li class="list-group-item active">
               GAMES
             </li>
-            <li v-for="g in storagedGames" :key="g" class="list-group-item list-game-item">
+            <li v-for="g in storagedGames" :key="g.id" class="list-group-item list-game-item">
               <div>
-                {{ g.Name }}
+                {{ g.name }}
               </div>
-              <select v-model="selectedValues[g]" class="form-control" style="width: 100px; margin: 8px 8px 8px auto">
-                <option v-for="friend in friends" :key="friend.Name">{{friend.Name}}</option>
+              <select v-model="selectedValues" class="form-control" style="width: 100px; margin: 8px 8px 8px auto">
+                <option v-for="friend in friends" :key="friend.id">{{friend.name}}</option>
               </select>
               <button class="btn btn-light" @click="() => handleEmprestar(g)"> Emprestar </button>
             </li>
@@ -21,17 +21,17 @@
         </div>
         <div class="col-md-8">
           <div class="row">
-            <div v-for="item in friends" :key="item.Name" class="col-md-4">
+            <div v-for="item in friends" :key="item.name" class="col-md-4">
               <div class="card" style="margin: 0px 0 32px">
                 <div class="card-body">
-                  <h5 class="card-title">{{ item.Name }}</h5>
-                  <p class="card-text">{{ item.Email }}</p>
+                  <h5 class="card-title">{{ item.name }}</h5>
+                  <p class="card-text">{{ item.email }}</p>
                   <ul class="list-group">
-                    <li v-show="item.Games" class="list-group-item active">
+                    <li v-show="item.games" class="list-group-item active">
                       GAMES
                     </li>
-                    <li class="list-group-item" v-for="game in item.Games" :key="game">
-                      {{ game.Name }}
+                    <li class="list-group-item" v-for="game in item.games" :key="game">
+                      {{ game.name }}
                     </li>
                   </ul>
                 </div>
@@ -86,10 +86,10 @@ export default {
         .catch(() => {});
     },
     handleEmprestar: function(game) {
-      if (!game || !this.selectedValues[game] ) {
+      if (!game || !this.selectedValues ) {
         return;
       }
-      console.log(game, this.selectedValues[game]);
+      console.log(this.selectedValues, game);
 
     }
   },
@@ -97,10 +97,11 @@ export default {
     http.get(`api/friends`, { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`} })
     .then((response) => {
       this.friends = response.data;
+      console.log(response);
     })
     .catch(function () {});
     
-     http.get(`api/games`, { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`} })
+     http.get(`api/game`, { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`} })
     .then((response) => {
       this.storagedGames = response.data;
     })

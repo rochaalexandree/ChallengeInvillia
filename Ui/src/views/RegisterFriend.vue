@@ -67,14 +67,14 @@ export default {
   },
   methods: {
     send: function() {
-        console.log("teste");
-        http.post(`api/friends`, { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`}},
+        http.post(`api/friends`, 
         {
             Name: this.Name,
             Age: this.Age,
             Email: this.Email,
             Games: this.Game
-        });
+        }, { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`}})
+        
     },
   },
   computed: {

@@ -25,7 +25,7 @@
             :message="!pristine && errors[0] ? errors[0] : ''"
           />
         </ValidationProvider>
-        <ValidationProvider rules="required|userName" v-slot="{ pristine, errors }">
+        <ValidationProvider rules="required" v-slot="{ pristine, errors }">
           <Input
             :value="userName"
             @input="userName = $event"
@@ -83,11 +83,11 @@ export default {
   },
   methods: {
   send: function() {
-      http.post('api/user/Register', {
+      http.post('api/user/register', {
         UserName: this.userName,
         Password: this.password,
-        FullName: this.name,
-        Email: this.email
+        Email: this.email,
+        FullName: this.name
       })
       .then(function () {
         this.$router.push({ path: '/dashboard' })

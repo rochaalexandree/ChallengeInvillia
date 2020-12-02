@@ -130,19 +130,14 @@ namespace ChallengeInvillia.API.Controllers
         {
             try
             {
-                Console.Write("\nEntrou no try\n");
                 var friend = await _repo.GetFriendAsyncById(FriendId);
-                Console.Write("obteve friend");
                 if (friend == null){
-                    Console.Write("\nnof found\n");
                     return NotFound();
                 }
 
                 _repo.Delete(friend);
-                Console.Write("\nEXECUTOU O DELETE\n");
                 if (await _repo.SaveChangesAsync())
                 {
-                    Console.Write("\nDELETOU\n");
                     return Ok();
                 }
             }

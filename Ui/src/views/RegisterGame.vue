@@ -22,7 +22,7 @@
                     @input="Type = $event"
                     type="text"
                     name="Type"
-                    label="Type"
+                    label="Tipo (Ex: Ação, Aventura...)"
                     :error="!!(!pristine && errors[0])"
                     :message="!pristine && errors[0] ? errors[0] : ''"
                 />

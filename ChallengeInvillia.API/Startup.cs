@@ -79,7 +79,7 @@ namespace ChallengeInvillia.API
             }).AddJsonOptions(opt => {
                 opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
                 opt.JsonSerializerOptions.PropertyNamingPolicy = null;
-            });
+            }).AddNewtonsoftJson();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
