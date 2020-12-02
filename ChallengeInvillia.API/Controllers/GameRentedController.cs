@@ -76,7 +76,7 @@ namespace ChallengeInvillia.API.Controllers
             return BadRequest();
         }
 
-        [HttpPut]
+        [HttpPut("{GameRentedId}")]
         public async Task<IActionResult> Put(int GameRentedId, GameRentedDto model)
         {
             try
@@ -103,7 +103,7 @@ namespace ChallengeInvillia.API.Controllers
             return BadRequest();
         }
 
-        [HttpDelete]
+        [HttpDelete("{GameRentedId}")]
         public async Task<IActionResult> Delete(int GameRentedId)
         {
             try

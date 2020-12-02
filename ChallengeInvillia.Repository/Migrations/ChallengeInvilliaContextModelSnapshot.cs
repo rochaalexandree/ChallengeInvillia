@@ -25,10 +25,10 @@ namespace ChallengeInvillia.Repository.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("email")
+                    b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -39,10 +39,8 @@ namespace ChallengeInvillia.Repository.Migrations
             modelBuilder.Entity("ChallengeInvillia.Domain.Game", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
 
                     b.Property<int?>("FriendId")
                         .HasColumnType("INTEGER");
@@ -50,10 +48,13 @@ namespace ChallengeInvillia.Repository.Migrations
                     b.Property<bool>("IsOnLoan")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Type")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id", "Name");
+                    b.HasKey("Id");
 
                     b.HasIndex("FriendId");
 
@@ -66,10 +67,20 @@ namespace ChallengeInvillia.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("FriendId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("GameId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("RentalDate")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FriendId");
+
+                    b.HasIndex("GameId");
 
                     b.ToTable("GameRenteds");
                 });
@@ -273,6 +284,17 @@ namespace ChallengeInvillia.Repository.Migrations
                     b.HasOne("ChallengeInvillia.Domain.Friend", null)
                         .WithMany("Games")
                         .HasForeignKey("FriendId");
+                });
+
+            modelBuilder.Entity("ChallengeInvillia.Domain.GameRented", b =>
+                {
+                    b.HasOne("ChallengeInvillia.Domain.Friend", "Friend")
+                        .WithMany()
+                        .HasForeignKey("FriendId");
+
+                    b.HasOne("ChallengeInvillia.Domain.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId");
                 });
 
             modelBuilder.Entity("ChallengeInvillia.Domain.Identity.UserRole", b =>

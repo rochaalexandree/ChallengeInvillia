@@ -27,9 +27,9 @@ namespace ChallengeInvillia.Repository
 
                 userRole.HasOne(ur => ur.User).WithMany(r => r.UserRoles).HasForeignKey(ur => ur.RoleId).IsRequired();
             });
-            builder.Entity<Game>().HasKey(table => new { 
-                table.Id, table.Name
-            }); 
+            // builder.Entity<Game>().HasKey(table => new { 
+            //     table.Id, table.Name
+            // }); 
         }
         
     }

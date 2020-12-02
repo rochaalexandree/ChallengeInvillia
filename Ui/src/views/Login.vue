@@ -3,7 +3,7 @@
     <ValidationObserver v-slot="{ invalid }">
       <h2>Acessar</h2>
       <form  @submit.prevent="send">
-        <ValidationProvider rules="required|userName" v-slot="{ pristine, errors }">
+        <ValidationProvider rules="required" v-slot="{ pristine, errors }">
           <Input
             :value="userName"
             @input="userName = $event"
@@ -21,8 +21,8 @@
             type="password"
             name="password"
             label="Senha"
-            :error="!!(!pristine && errors[0])"
-            :message="!pristine && errors[0] ? errors[0] : ''"
+            :error="!!(!pristine && (errors[0] || errorMessage))"
+            :message="(!pristine && (errors[0] || errorMessage)) ? (errors[0] ? errors[0] : errorMessage) : ''"
           />
         </ValidationProvider>
         <button class="btn btn-primary btn-login" :disabled="invalid" type="submit">
@@ -40,7 +40,6 @@
 // @ is an alias to /src
 import Input from '@/components/Input.vue'
 import { AUTH_LOCAL } from '@/store/actions.type.js'
-
 export default {
   name: 'Home',
   components: {
@@ -49,12 +48,16 @@ export default {
   methods: {
     send: function() {
       this.$store
-        .dispatch(AUTH_LOCAL, { UserName: this.userName, Password: this.password })
-        .then(() => {
-          this.$router.push({ path: '/dashboard' })
-        })
-        .catch(() => {});
+        .dispatch(AUTH_LOCAL, { UserName: this.userName, Password: this.password, sucessCallback: () =>{
+          console.log("a")
+          this.$router.push({ path: '/dashboard' }) 
+        } })
     },
+  },
+  computed: {
+    errorMessage () {
+      return this.$store.state.auth.error;
+    }
   },
   data: function() {
     return {

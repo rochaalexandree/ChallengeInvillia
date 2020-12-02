@@ -6,7 +6,7 @@ namespace ChallengeInvillia.Domain
     {
         public int Id { get; set; }
         public DateTime RentalDate { get; set; }
-        public Friend Friend { get; }
-        public Game Game { get; }
+        public Friend Friend { get; set;}
+        public Game Game { get; set;}
     }
 }

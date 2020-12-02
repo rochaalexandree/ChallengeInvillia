@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import Login from '../views/Login.vue'
+import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
+import RegisterGame from '../views/RegisterGame.vue'
+import RegisterFriend from '../views/RegisterFriend.vue'
+
 import store from '../store';
 
 Vue.use(VueRouter)
@@ -10,7 +13,7 @@ const routes = [
   {
     path: '/',
     name: 'Login',
-    component: Dashboard
+    component: Login
   },
   {
     path: '/register',
@@ -21,6 +24,22 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     component: Dashboard,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/register-game',
+    name: 'RegistrarGame',
+    component: RegisterGame,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/register-friend',
+    name: 'RegistrarAmigo',
+    component: RegisterFriend,
     meta: {
       requiresAuth: true
     }

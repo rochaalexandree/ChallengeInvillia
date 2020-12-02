@@ -97,15 +97,16 @@ namespace ChallengeInvillia.API.Controllers
             return BadRequest();
         }
 
-        [HttpPut]
+        [HttpPut("{FriendId}")]
         public async Task<IActionResult> Put(int FriendId, FriendDto model)
         {
             try
             {
                 var friend = await _repo.GetFriendAsyncById(FriendId);
 
-                if (friend == null)
+                if (friend == null){
                     return NotFound();
+                }
 
                 _mapper.Map(model, friend);
 
@@ -124,20 +125,24 @@ namespace ChallengeInvillia.API.Controllers
             return BadRequest();
         }
 
-        [HttpDelete]
+        [HttpDelete("{FriendId}")]
         public async Task<IActionResult> Delete(int FriendId)
         {
             try
             {
+                Console.Write("\nEntrou no try\n");
                 var friend = await _repo.GetFriendAsyncById(FriendId);
-
-                if (friend == null)
+                Console.Write("obteve friend");
+                if (friend == null){
+                    Console.Write("\nnof found\n");
                     return NotFound();
+                }
 
                 _repo.Delete(friend);
-
+                Console.Write("\nEXECUTOU O DELETE\n");
                 if (await _repo.SaveChangesAsync())
                 {
+                    Console.Write("\nDELETOU\n");
                     return Ok();
                 }
             }

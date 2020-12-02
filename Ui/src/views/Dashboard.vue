@@ -10,7 +10,7 @@
             </li>
             <li v-for="g in storagedGames" :key="g" class="list-group-item list-game-item">
               <div>
-                {{ g }}
+                {{ g.Name }}
               </div>
               <select v-model="selectedValues[g]" class="form-control" style="width: 100px; margin: 8px 8px 8px auto">
                 <option v-for="friend in friends" :key="friend.Name">{{friend.Name}}</option>
@@ -27,11 +27,11 @@
                   <h5 class="card-title">{{ item.Name }}</h5>
                   <p class="card-text">{{ item.Email }}</p>
                   <ul class="list-group">
-                    <li class="list-group-item active">
+                    <li v-show="item.Games" class="list-group-item active">
                       GAMES
                     </li>
                     <li class="list-group-item" v-for="game in item.Games" :key="game">
-                      {{ game }}
+                      {{ game.Name }}
                     </li>
                   </ul>
                 </div>
@@ -57,18 +57,21 @@ export default {
   },
   data: function() {
     return {
-      name: this.$store.state.auth.user.name,
+      name: this.$store.state.auth.userName,
       friends: [
-        { Name: 'name 1', Age: 10, Email: 'abc@hotmail.com', Games: ['a', 'b', 'c'] },
-        { Name: 'name laksdk', Age: 10, Email: 'abc@hotmail.com', Games: ['x', 'b', 'c']  },
-        { Name: 'name 1231231', Age: 10, Email: 'abc@hotmail.com', Games: ['d', 'b', 'c']  },
-        { Name: 'name 99', Age: 10, Email: 'abc@hotmail.com', Games: ['a', 'e', 'c']  },
-        { Name: 'name 21', Age: 10, Email: 'abc@hotmail.com', Games: ['f', 'b', 'c']  },
+        // { Name: 'XX 1', Age: 10, email: 'abc@hotmail.com', Games: [
+        //   { Name: "adsdas", type: "action", isOnLoan: true },
+        //   { Name: "here", type: "action", isOnLoan: false }
+        // ]},
+        // { Name: 'YY laksdk', Age: 10, email: 'abc@hotmail.com', Games: [
+        //   { Name: "KKK", type: "action", isOnLoan: true },
+        //   { Name: "xD", type: "action", isOnLoan: false }
+        // ]},
       ],
       storagedGames: [
-        'assasins creed',
-        'wingin eleven',
-        'um nome muito grande para caber em uma linha '
+        // { Name: "assasins creed", type: "action", isOnLoan: false },
+        // { Name: "wingin eleven", type: "action", isOnLoan: false },
+        // { Name: "um nome muito grande para caber em uma linha", type: "action", isOnLoan: false }
       ],
       selectedValues: {}
     }
@@ -86,18 +89,22 @@ export default {
       if (!game || !this.selectedValues[game] ) {
         return;
       }
-            console.log(game, this.selectedValues[game]);
+      console.log(game, this.selectedValues[game]);
 
     }
   },
   created: function() {
-    http.get(`api/friends`)
-    .then(function (response) {
+    http.get(`api/friends`, { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`} })
+    .then((response) => {
       this.friends = response.data;
     })
-    .catch(function () {
-      // location.reload()
-    });
+    .catch(function () {});
+    
+     http.get(`api/games`, { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`} })
+    .then((response) => {
+      this.storagedGames = response.data;
+    })
+    .catch(function () {});
   },
 }
 </script>

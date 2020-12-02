@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChallengeInvillia.API.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class GameController : ControllerBase
     {
         public readonly IChallengeInvilliaRepository _repo;
@@ -78,18 +80,18 @@ namespace ChallengeInvillia.API.Controllers
                 _repo.Add(game);
                 if(await _repo.SaveChangesAsync())
                 {
-                    return Created($"/api/game/{model.Id}", _mapper.Map<FriendDto>(game));
+                    return Created($"/api/game/{model.Id}", _mapper.Map<GameDto>(game));
                 }
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha ao acessar banco de dados");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Falha ao acessar banco de dados : {ex}");
             }
 
             return BadRequest();
         }
 
-        [HttpPut]
+        [HttpPut("{GameId}")]
         public async Task<IActionResult> Put(int GameId, GameDto model)
         {
             try
@@ -105,7 +107,7 @@ namespace ChallengeInvillia.API.Controllers
 
                 if(await _repo.SaveChangesAsync())
                 {
-                    return Created($"/api/game/{model.Id}", _mapper.Map<FriendDto>(game));
+                    return Created($"/api/game/{model.Id}", _mapper.Map<GameDto>(game));
                 }
             }
             catch (System.Exception)
@@ -116,12 +118,12 @@ namespace ChallengeInvillia.API.Controllers
             return BadRequest();
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete(int FriendId)
+        [HttpDelete("{GameId}")]
+        public async Task<IActionResult> Delete(int GameId)
         {
             try
             {
-                var game = await _repo.GetGameAsyncById(FriendId);
+                var game = await _repo.GetGameAsyncById(GameId);
                 
                 if(game == null) 
                     return NotFound();
