@@ -53,7 +53,7 @@ namespace ChallengeInvillia.Repository.Migrations
                 name: "Friends",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    FriendId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: true),
                     Age = table.Column<int>(nullable: false),
@@ -61,7 +61,20 @@ namespace ChallengeInvillia.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Friends", x => x.Id);
+                    table.PrimaryKey("PK_Friends", x => x.FriendId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GameRenteds",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RentalDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameRenteds", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -180,7 +193,7 @@ namespace ChallengeInvillia.Repository.Migrations
                 name: "Games",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    GameId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: true),
                     Type = table.Column<string>(nullable: true),
@@ -189,39 +202,12 @@ namespace ChallengeInvillia.Repository.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Games", x => x.Id);
+                    table.PrimaryKey("PK_Games", x => x.GameId);
                     table.ForeignKey(
                         name: "FK_Games_Friends_FriendId",
                         column: x => x.FriendId,
                         principalTable: "Friends",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "GameRenteds",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    RentalDate = table.Column<DateTime>(nullable: false),
-                    FriendId = table.Column<int>(nullable: true),
-                    GameId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GameRenteds", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_GameRenteds_Friends_FriendId",
-                        column: x => x.FriendId,
-                        principalTable: "Friends",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_GameRenteds_Games_GameId",
-                        column: x => x.GameId,
-                        principalTable: "Games",
-                        principalColumn: "Id",
+                        principalColumn: "FriendId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -263,16 +249,6 @@ namespace ChallengeInvillia.Repository.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameRenteds_FriendId",
-                table: "GameRenteds",
-                column: "FriendId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GameRenteds_GameId",
-                table: "GameRenteds",
-                column: "GameId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Games_FriendId",
                 table: "Games",
                 column: "FriendId");
@@ -299,13 +275,13 @@ namespace ChallengeInvillia.Repository.Migrations
                 name: "GameRenteds");
 
             migrationBuilder.DropTable(
+                name: "Games");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Games");
 
             migrationBuilder.DropTable(
                 name: "Friends");

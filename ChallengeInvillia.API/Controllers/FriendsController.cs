@@ -36,9 +36,9 @@ namespace ChallengeInvillia.API.Controllers
 
                 return Ok(results);
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, "Falha ao acessar banco de dados");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Falha ao acessar banco de dados : {ex}");
             }
 
         }
@@ -86,7 +86,7 @@ namespace ChallengeInvillia.API.Controllers
                 _repo.Add(friend);
                 if (await _repo.SaveChangesAsync())
                 {
-                    return Created($"/api/friends/{model.Id}", _mapper.Map<FriendDto>(friend));
+                    return Created($"/api/friends/{model.FriendId}", _mapper.Map<FriendDto>(friend));
                 }
             }
             catch (System.Exception)
@@ -114,7 +114,7 @@ namespace ChallengeInvillia.API.Controllers
 
                 if (await _repo.SaveChangesAsync())
                 {
-                    return Created($"/api/friends/{model.Id}", _mapper.Map<FriendDto>(friend));
+                    return Created($"/api/friends/{model.FriendId}", _mapper.Map<FriendDto>(friend));
                 }
             }
             catch (System.Exception)

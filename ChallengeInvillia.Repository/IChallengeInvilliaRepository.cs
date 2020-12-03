@@ -14,8 +14,8 @@ namespace ChallengeInvillia.Repository
          Task<Friend> GetFriendAsyncById(int FriendId);
          Task<Friend[]> GetFriendAsyncByName(string Name);
          Task<Game[]> GetAllGameAsync();
-         Task<Game[]> GetGameAsyncById(int GameId);
-         Task<Game[]> GetGameAsyncByName(string Name);
+         Task<Game> GetGameAsyncById(int GameId);
+         Task<Game[]> GetGameAsyncByFriend(int FriendId);
          Task<GameRented[]> GetAllGameRentedAsync();
          Task<GameRented> GetGameRentedAsyncById(int GameRentedId);
     }

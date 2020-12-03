@@ -14,7 +14,7 @@ namespace ChallengeInvillia.UnitTest
     public class UnitTestFriends
     {
         private HttpClient _client;
-        public string token = "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhbGV4YW5kcmUiLCJuYmYiOjE2MDY4NjUzODEsImV4cCI6MTYwNjk1MTc4MSwiaWF0IjoxNjA2ODY1MzgxfQ.PKX_tTyHTTfmCg8wbV_ZFfocAsxtPYGk1Eb2fgeyzaiRW5hMMziefCw4fjNK7DgcuxIMtH7k9oZMXS8evPROsw";
+        public string token = "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhbGV4YW5kcmUiLCJuYmYiOjE2MDcwMTIwNTgsImV4cCI6MTYwNzA5ODQ1OCwiaWF0IjoxNjA3MDEyMDU4fQ.y5-RcfYMxJSbcK3fNcDygmtQGz-2jKXknr2MS09syatsA2fscImDWjnCjKpha9_hnXyRQ4jyBiE2GrHY_0l3kQ";
 
         public UnitTestFriends()
         {
@@ -36,7 +36,7 @@ namespace ChallengeInvillia.UnitTest
         }
 
         [Theory]
-        [InlineData(1)]
+        [InlineData(4)]
         public async Task FriendsGetOneTestAsync(int? id = null)
         {
             var request = new HttpRequestMessage(new HttpMethod("GET"), $"api/friends/{id}");
@@ -50,15 +50,10 @@ namespace ChallengeInvillia.UnitTest
         [Fact]
         public async Task FriendsPostOneTestAsync()
         {
-            var friend = new FriendDto();
-            friend.Name = "João";
-            friend.Id = 1;
-            friend.Age = 21;
-            friend.Email = "aa@aaa.com";
-
             var request = new HttpRequestMessage(new HttpMethod("POST"), $"api/friends/");
             
             request.Headers.Add("Authorization", token);
+            request.Properties.Add("Name: 'João', Id: 1, Age: 21, Email: 'aa@aaa.com'", new FriendDto());
             var response = await _client.SendAsync(request);
 
             response.EnsureSuccessStatusCode();

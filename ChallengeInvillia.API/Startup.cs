@@ -35,7 +35,7 @@ namespace ChallengeInvillia.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ChallengeInvilliaContext>(x => x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<ChallengeInvilliaContext>(x => x.UseSqlite("Data Source=ChallengeInvillia.db"));
             
             IdentityBuilder builder = services.AddIdentityCore<User>( options => 
             {
@@ -57,7 +57,7 @@ namespace ChallengeInvillia.API
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("chave secreta da api")),
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };

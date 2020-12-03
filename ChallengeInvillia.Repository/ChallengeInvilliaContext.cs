@@ -3,6 +3,7 @@ using ChallengeInvillia.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using ChallengeInvillia.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Proxies;
 
 namespace ChallengeInvillia.Repository
 {
@@ -27,9 +28,6 @@ namespace ChallengeInvillia.Repository
 
                 userRole.HasOne(ur => ur.User).WithMany(r => r.UserRoles).HasForeignKey(ur => ur.RoleId).IsRequired();
             });
-            // builder.Entity<Game>().HasKey(table => new { 
-            //     table.Id, table.Name
-            // }); 
         }
         
     }

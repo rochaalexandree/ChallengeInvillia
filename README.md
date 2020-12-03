@@ -1,8 +1,8 @@
 ## ChallengeInvillia
 
 - A api foi desenvolvida orientada a domínio.
+- Autorização por meio de Identity e JWT.
 - Uso de mappers, DataAnnotations. 
 - Uso do ORM Entity framework. 
 - Uso de Migrations para construir o banco de dados relacional.
-
-- O docker foi criado de forma separda para API e para o Front, logo existem dois arquivos 'docker-compose.yml'.
+- VueJs no front.

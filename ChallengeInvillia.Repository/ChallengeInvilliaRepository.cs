@@ -37,7 +37,7 @@ namespace ChallengeInvillia.Repository
         //Friends        
         public async Task<Friend[]> GetAllFriendAsync()
         {
-            IQueryable<Friend> query = _context.Friends.Include(c => c.Games);
+            IQueryable<Friend> query = _context.Friends.Include(f => f.Games);
 
             query = query.OrderBy(c => c.Name);
 
@@ -47,7 +47,7 @@ namespace ChallengeInvillia.Repository
         {
             IQueryable<Friend> query = _context.Friends.Include(c => c.Games);
 
-            query = query.OrderBy(c => c.Name).Where(c => c.Id == FriendId);
+            query = query.OrderBy(c => c.Name).Where(c => c.FriendId == FriendId);
 
             return await query.FirstOrDefaultAsync();
         }
@@ -64,26 +64,26 @@ namespace ChallengeInvillia.Repository
         // Games
         public async Task<Game[]> GetAllGameAsync()
         {
-            IQueryable<Game> query = _context.Games;
+            IQueryable<Game> query = _context.Games.Include(g => g.friend);
 
             query = query.OrderBy(c => c.Name);
 
             return await query.ToArrayAsync();
         }
 
-        public async Task<Game[]> GetGameAsyncById(int GameId)
+        public async Task<Game> GetGameAsyncById(int GameId)
         {
-            IQueryable<Game> query = _context.Games;
+            IQueryable<Game> query = _context.Games.Include(g => g.friend);
 
-            query = query.OrderBy(c => c.Name).Where(g => g.Id == GameId);
+            query = query.OrderBy(c => c.Name).Where(g => g.GameId == GameId);
 
-            return await query.ToArrayAsync();
+            return await query.FirstOrDefaultAsync();
         }
-        public async Task<Game[]> GetGameAsyncByName(string Name)
+        public async Task<Game[]> GetGameAsyncByFriend(int FriendId)
         {
-            IQueryable<Game> query = _context.Games;
+            IQueryable<Game> query = _context.Games.Include(c => c.friend);
 
-            query = query.OrderBy(c => c.Name).Where(c => c.Name.ToLower().Contains(Name.ToLower()));
+            query = query.OrderBy(c => c.Name).Where(c => c.friend.FriendId == FriendId);
 
             return await query.ToArrayAsync();
         }
@@ -91,7 +91,7 @@ namespace ChallengeInvillia.Repository
         // GameRented
         public async Task<GameRented[]> GetAllGameRentedAsync()
         {
-            IQueryable<GameRented> query = _context.GameRenteds.Include(g => g.Friend).Include(g => g.Game);
+            IQueryable<GameRented> query = _context.GameRenteds;
 
             query = query.OrderByDescending(c => c.RentalDate);
 
@@ -99,7 +99,7 @@ namespace ChallengeInvillia.Repository
         }
         public async Task<GameRented> GetGameRentedAsyncById(int GameRentedId)
         {
-            IQueryable<GameRented> query = _context.GameRenteds.Include(g => g.Friend).Include(g => g.Game);
+            IQueryable<GameRented> query = _context.GameRenteds;
 
             query = query.OrderByDescending(c => c.RentalDate).Where(g => g.Id == GameRentedId);
 

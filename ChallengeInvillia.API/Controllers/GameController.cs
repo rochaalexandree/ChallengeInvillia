@@ -39,12 +39,12 @@ namespace ChallengeInvillia.API.Controllers
             
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("{GameId}")]
+        public async Task<IActionResult> Get(int GameId)
         {
             try
             {
-                var game = await _repo.GetGameAsyncById(id);
+                var game = await _repo.GetGameAsyncById(GameId);
 
                 var results = _mapper.Map<GameDto>(game);
 
@@ -56,12 +56,12 @@ namespace ChallengeInvillia.API.Controllers
             }
         }
 
-        [HttpGet("getByName/{name}")]
-        public async Task<IActionResult> Get(string name)
+        [HttpGet("getByFriend/{FriendId}")]
+        public async Task<IActionResult> GetByFriend(int FriendId)
         {
             try
             {
-                var games = await _repo.GetGameAsyncByName(name);
+                var games = await _repo.GetGameAsyncByFriend(FriendId);
                 var results = _mapper.Map<IEnumerable<GameDto>>(games);
                 return Ok(results);
             }
@@ -80,7 +80,7 @@ namespace ChallengeInvillia.API.Controllers
                 _repo.Add(game);
                 if(await _repo.SaveChangesAsync())
                 {
-                    return Created($"/api/game/{model.Id}", _mapper.Map<GameDto>(game));
+                    return Created($"/api/game/{model.GameId}", _mapper.Map<GameDto>(game));
                 }
             }
             catch (System.Exception ex)
@@ -107,7 +107,7 @@ namespace ChallengeInvillia.API.Controllers
 
                 if(await _repo.SaveChangesAsync())
                 {
-                    return Created($"/api/game/{model.Id}", _mapper.Map<GameDto>(game));
+                    return Created($"/api/game/{model.GameId}", _mapper.Map<GameDto>(game));
                 }
             }
             catch (System.Exception)
