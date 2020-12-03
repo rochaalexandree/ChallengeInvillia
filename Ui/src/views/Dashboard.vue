@@ -13,7 +13,7 @@
                 {{ g.name }}
               </div>
               <select v-model="selectedValues" class="form-control" style="width: 100px; margin: 8px 8px 8px auto">
-                <option v-for="friend in friends" :key="friend.id">{{friend.name}}</option>
+                <option v-for="friend in friends" :key="friend">{{friend.name}}</option>
               </select>
               <button class="btn btn-light" @click="() => handleEmprestar(g)"> Emprestar </button>
             </li>
