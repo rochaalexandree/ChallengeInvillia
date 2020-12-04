@@ -8,7 +8,7 @@
             <li class="list-group-item active">
               GAMES
             </li>
-            <li v-for="g in storagedGames" :key="g.id" class="list-group-item list-game-item">
+            <li v-for="g in storagedGames" :key="g.gameId" class="list-group-item list-game-item">
               <div>
                 {{ g.name }}
               </div>
@@ -21,24 +21,22 @@
         </div>
         <div class="col-md-8">
           <div class="row">
-            <div v-for="item in friends" :key="item.name" class="col-md-4">
+            <div v-for="item in storagedGames" :key="item.gameId" class="col-md-4">
               <div class="card" style="margin: 0px 0 32px">
                 <div class="card-body">
                   <h5 class="card-title">{{ item.name }}</h5>
-                  <p class="card-text">{{ item.email }}</p>
-                  <ul class="list-group">
-                    <li v-show="item.games" class="list-group-item active">
-                      GAMES
-                    </li>
-                    <li class="list-group-item" v-for="game in item.games" :key="game">
-                      {{ game.name }}
-                    </li>
-                  </ul>
+                  <p class="card-text">{{ item.type }}</p>
+                  <div v-if="item.friend  != null" class="list-group-item active">
+                    <div>
+                      {{ item.friend.name }}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <!-- <button class="btn btn-light" @click="() => listar()"> Listar Atribuições de Emprestimos </button> -->
       </div>
     </div>
   </div>
@@ -73,7 +71,8 @@ export default {
         // { Name: "wingin eleven", type: "action", isOnLoan: false },
         // { Name: "um nome muito grande para caber em uma linha", type: "action", isOnLoan: false }
       ],
-      selectedValues: {}
+      selectedValues: {},
+      friendsFinal: []
     }
   },
   methods: {
@@ -91,22 +90,40 @@ export default {
       }
       console.log(this.selectedValues, game);
 
+    },
+    listar: function (){
+      console.log("entrou");
+      
+      let amigos = Object.entries(this.friends);
+
+      console.log(amigos[0][1].friendId);
+
+      console.log(this.friends);
+      amigos.forEach(element => {
+        var map = new Map(element);
+        console.log(map);
+        
+      });
+      // console.log(this.storagedGames);
     }
   },
   created: function() {
     http.get(`api/friends`, { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`} })
     .then((response) => {
       this.friends = response.data;
-      console.log(response);
+      console.log(this.friends);
+      http.get(`api/game`, { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`} })
+      .then((responseTwo) => {
+        this.storagedGames = responseTwo.data;
+        
+        
+      })
+    .catch(function () {console.log("erro")});
+      
     })
     .catch(function () {});
     
-     http.get(`api/game`, { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`} })
-    .then((response) => {
-      this.storagedGames = response.data;
-    })
-    .catch(function () {});
-  },
+  }
 }
 </script>
 
