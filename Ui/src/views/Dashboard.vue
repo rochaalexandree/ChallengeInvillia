@@ -26,7 +26,7 @@
                 <div class="card-body">
                   <h5 class="card-title">{{ item.name }}</h5>
                   <p class="card-text">{{ item.type }}</p>
-                  <div v-if="item.friend  != null" class="list-group-item active">
+                  <div v-if="(item.friend  != null) && item.isOnLoan == true" class="list-group-item active">
                     <div>
                       {{ item.friend.name }}
                     </div>
