@@ -13,7 +13,7 @@
                 {{ g.name }}
               </div>
               <select v-model="selectedValues" class="form-control" style="width: 100px; margin: 8px 8px 8px auto">
-                <option v-for="friend in friends" :key="friend">{{friend.name}}</option>
+                <option v-for="friend in friends" :key="friend">{{friend.friendId}}-{{friend.name}}</option>
               </select>
               <button class="btn btn-light" @click="() => handleEmprestar(g)"> Emprestar </button>
             </li>
@@ -84,44 +84,46 @@ export default {
         })
         .catch(() => {});
     },
-    handleEmprestar: function(game) {
+    handleEmprestar: async function(game) {
       if (!game || !this.selectedValues ) {
         return;
       }
+      let idFriend = this.selectedValues.split('-');
       console.log(this.selectedValues, game);
+      console.log(idFriend[0]);
+      let friendObj;
+      await http.get(`api/friends/` + idFriend[0] , { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`} })
+      .then((response) => {
+        friendObj = response.data;
+        console.log("Amigo recuperado: " + friendObj);
+      })
+      .catch(function () {});
 
-    },
-    listar: function (){
-      console.log("entrou");
-      
-      let amigos = Object.entries(this.friends);
-
-      console.log(amigos[0][1].friendId);
-
-      console.log(this.friends);
-      amigos.forEach(element => {
-        var map = new Map(element);
-        console.log(map);
-        
-      });
-      // console.log(this.storagedGames);
+      http.put(`api/game/` + idFriend[0], {
+                GameId: game.gameId,
+                Name: game.name,
+                Type: game.type,
+                IsOnLoan: true,
+                friend: friendObj 
+            },{ headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`} })
+      .then(() => {
+        console.log("Gravou");
+      })
+      .catch(function () {console.log("erro");});
     }
   },
   created: function() {
     http.get(`api/friends`, { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`} })
     .then((response) => {
       this.friends = response.data;
-      console.log(this.friends);
-      http.get(`api/game`, { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`} })
-      .then((responseTwo) => {
-        this.storagedGames = responseTwo.data;
-        
-        
-      })
-    .catch(function () {console.log("erro")});
-      
     })
     .catch(function () {});
+
+    http.get(`api/game`, { headers: { "Authorization":`Bearer ${this.$store.state.auth.token}`} })
+      .then((responseTwo) => {
+        this.storagedGames = responseTwo.data;
+      })
+    .catch(function () {console.log("erro")});
     
   }
 }
